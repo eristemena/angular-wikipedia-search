@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { pluck } from 'rxjs/operators';
+import { pluck, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 export interface PageEntry {
@@ -9,6 +9,12 @@ export interface PageEntry {
   title: string;
   wordcount: number;
   snippet: string;
+};
+
+interface WikipediaResponse {
+  query: {
+    search: PageEntry[],
+  }
 };
 
 @Injectable({
@@ -19,7 +25,7 @@ export class WikipediaService {
   constructor(private httpClient: HttpClient) { }
 
   search(term: string): Observable<PageEntry[]> {
-    return this.httpClient.get<PageEntry[]>(`https://en.wikipedia.org/w/api.php`, {
+    return this.httpClient.get<WikipediaResponse>(`https://en.wikipedia.org/w/api.php`, {
       params: {
         action: 'query',
         format: 'json',
@@ -29,6 +35,7 @@ export class WikipediaService {
         origin: '*'
       }
     }).pipe(
+      tap(value => console.log('tapped', value)),
       pluck('query', 'search')
     );
   }

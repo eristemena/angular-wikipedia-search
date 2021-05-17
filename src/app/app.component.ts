@@ -8,13 +8,16 @@ import { PageEntry, WikipediaService } from './wikipedia.service';
 })
 export class AppComponent {
   pages: PageEntry[] = [];
+  errorMessage: String = '';
 
   constructor(private wikipediaService: WikipediaService) {}
 
   onSubmit(term: string) {
     this.wikipediaService.search(term)
-      .subscribe((response: PageEntry[]) => {
-        this.pages = response;
+      .subscribe((results: PageEntry[]) => {
+        this.pages = results;
+      }, (err: Error) => {
+        this.errorMessage = err.message;
       })
   }
 }

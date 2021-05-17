@@ -1,4 +1,7 @@
 <div class="container">
   <app-search-bar (submit)="onSubmit($event)"></app-search-bar>
+  <div *ngIf="errorMessage.length" class="ui box">
+    {{errorMessage}}
+  </div>
   <app-page-list [pages]="pages" *ngIf="pages.length > 0"></app-page-list>
 </div>
